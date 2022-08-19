@@ -11,8 +11,8 @@ export default function Pages() {
 
 			<div style={{ height: "100%" }}>
 				<Routes>
-					<Route exact path={"/"} element={<Home />} />
-					{/* <Route exact path={"/"} element={<Onboarding />} /> */}
+					{/* <Route exact path={"/"} element={<Home />} /> */}
+					<Route exact path={"/"} element={<Onboarding />} />
 					<Route
 						exact
 						path={AppPages.ONBOARDING_PAGE}

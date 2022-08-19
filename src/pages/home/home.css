@@ -2,17 +2,37 @@
 	height: 100%;
 }
 
-.logout {
-	height: 100px;
-	width: 100px;
-	background-color: red;
-}
-
 .home-tabs {
 	display: flex;
 	justify-content: space-between;
 	padding-right: 30px;
 	align-items: center;
+}
+
+.home-main {
+	position: relative;
+	height: 55%;
+	/* background: red; */
+}
+
+.logout {
+	height: 100px;
+	width: 100px;
+	position: absolute;
+	bottom: 0;
+	right: 6vw;
+	border: none;
+	background: none;
+	display: grid;
+	place-items: center;
+}
+.logout > img {
+	width: 5vw;
+}
+
+.home-item-input {
+	text-align: center;
+	height: 100%;
 }
 
 .user-info {
@@ -22,11 +42,11 @@
 .user-info > p {
 	font-weight: bold;
 	margin-right: 30px;
-	margin-left: 30px;
+	margin-left: 40px;
 	font-size: 2.5vw;
 }
 
-.home-left {
+.user-tab {
 	padding-top: 10vh;
 }
 
@@ -37,4 +57,10 @@
 
 .home-btn {
 	height: 100%;
+}
+
+.blok {
+	display: flex;
+	/* align-items: flex-end; */
+	margin-right: 60px;
 }

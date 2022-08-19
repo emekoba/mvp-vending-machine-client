@@ -1,17 +1,17 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:2000/";
-
 const ROUTES = {
 	auth: "user/",
 	product: "product/",
 	transaction: "transaction/",
 };
-
 const ENDPOINT = {
 	signup: "create",
 	signin: "login",
-	deposit: "update",
+	update: "update",
+	deposit: "deposit",
+	buy: "buy",
 };
 
 function authHeader() {
@@ -23,37 +23,6 @@ function authHeader() {
 		return {};
 	}
 }
-
-// function registers(form) {
-// 	// return axios
-// 	return fetch(API_URL + ROUTES.auth + ENDPOINT.signup, {
-// 		method: "POST",
-// 		body: JSON.stringify({
-// 			first_name: form.firstName,
-// 			user_role: form.userRole,
-// 			last_name: form.lastName,
-// 			phone_number: form.phoneNumber,
-// 			address: form.address,
-// 			email: form.email,
-// 			password: form.password,
-// 			confirm_password: form.cpassword,
-// 		}),
-
-// 		header: {
-// 			"Content-Type": "application/json",
-// 		},
-// 	})
-// 		.then((res) => {
-// 			return {
-// 				success: true,
-// 				data: res.data,
-// 			};
-// 		})
-// 		.catch((e) => {
-
-// 			return { success: false, messages: [e?.response?.data?.message] };
-// 		});
-// }
 
 function asyncLogin(form) {
 	return axios
@@ -102,26 +71,47 @@ function asyncRegister(form) {
 		});
 }
 
-// function transfer(form) {
-// 	return axios
-// 		.post(
-// 			API_URL + ROUTES.product + ENDPOINT.transfer,
-// 			{
-// 				recipient: form.recipient,
-// 				amount: parseInt(form.amount),
-// 			},
-// 			{ headers: authHeader() }
-// 		)
-// 		.then((res) => {
-// 			return {
-// 				success: true,
-// 				data: res.data,
-// 			};
-// 		})
-// 		.catch((e) => {
-// 			return { success: false, messages: [e?.response?.data?.message] };
-// 		});
-// }
+function asyncBuy(form) {
+	return axios
+		.post(
+			API_URL + ROUTES.transaction + ENDPOINT.buy,
+			{
+				productId: form.productId,
+				amount: form.amount,
+			},
+			{ headers: authHeader() }
+		)
+		.then((res) => {
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, messages: [e?.response?.data?.message] };
+		});
+}
+
+function asyncUpdate({ role, username }) {
+	return axios
+		.put(
+			API_URL + ROUTES.user + ENDPOINT.update,
+			{
+				role,
+				username,
+			},
+			{ headers: authHeader() }
+		)
+		.then((res) => {
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, messages: [e?.response?.data?.message] };
+		});
+}
 
 function asyncDeposit(form) {
 	return axios
@@ -143,39 +133,19 @@ function asyncDeposit(form) {
 		});
 }
 
-// function withdraw(form) {
-// 	return axios
-// 		.post(
-// 			API_URL + ROUTES.product + ENDPOINT.withdraw,
-// 			{
-// 				amount: parseInt(form.amount),
-// 			},
-// 			{ headers: authHeader() }
-// 		)
-// 		.then((res) => {
-// 			return {
-// 				success: true,
-// 				data: res.data,
-// 			};
-// 		})
-// 		.catch((e) => {
-// 			return { success: false, messages: [e?.response?.data?.message] };
-// 		});
-// }
-
-// function getAllUsers() {
-// 	return axios
-// 		.get(API_URL + ROUTES.transaction + ENDPOINT.all, { headers: authHeader() })
-// 		.then((res) => {
-// 			return {
-// 				success: true,
-// 				data: res.data,
-// 			};
-// 		})
-// 		.catch((e) => {
-// 			return { success: false, messages: [e?.response?.data?.message] };
-// 		});
-// }
+function asyncGetProduct(id) {
+	return axios
+		.get(API_URL + ROUTES.product + `${id}`, { headers: authHeader() })
+		.then((res) => {
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, messages: [e?.response?.data?.message] };
+		});
+}
 
 // function deleteUser(account_number) {
 // 	return axios
@@ -218,10 +188,7 @@ export {
 	asyncLogin,
 	asyncRegister,
 	asyncDeposit,
-	// transfer,
-	// deposit,
-	// withdraw,
-	// getAllUsers,
-	// deleteUser,
-	// getTransactions,
+	asyncGetProduct,
+	asyncBuy,
+	asyncUpdate,
 };

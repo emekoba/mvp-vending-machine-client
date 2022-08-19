@@ -1,15 +1,12 @@
 import { createContext } from "react";
-import { AppPages, DisPatchCommands, generateId } from "../globals";
+import { AppPages, DispatchCommands, generateId } from "../globals";
 
 export const Control = createContext();
 
 export const globalStore = {
 	isLoggedIn: false,
 	currentAppPage: AppPages.HOME_PAGE,
-	currentUser: {
-		username: "Russell",
-		cost: 100,
-	},
+	currentUser: {},
 };
 
 function registerUser(name, email, password, state) {
@@ -73,30 +70,39 @@ function createItem(item, state) {
 
 export function globalReducer(state = globalStore, action) {
 	switch (action.type) {
-		case DisPatchCommands.LOGIN:
+		case DispatchCommands.LOGIN:
 			return {
 				...state,
 				isLoggedIn: true,
 				currentUser: action.user,
 			};
 
-		case DisPatchCommands.REGISTER:
+		case DispatchCommands.REGISTER:
 			return registerUser(action.name, action.email, action.password, state);
 
-		case DisPatchCommands.LOGOUT:
+		case DispatchCommands.LOGOUT:
 			return {
 				...state,
 				isLoggedIn: false,
 			};
 
-		case DisPatchCommands.CHANGE_CURRENT_PAGE:
+		case DispatchCommands.CHANGE_CURRENT_PAGE:
 			return {
 				...state,
 				currentAppPage: action.payload,
 			};
 
-		case DisPatchCommands.CREATE_ITEM:
+		case DispatchCommands.CREATE_PRODUCT:
 			return createItem(action.item, state);
+
+		case DispatchCommands.UPDATE_WALLET:
+			return {
+				...state,
+				currentUser: {
+					...state.currentUser,
+					cost: parseInt(state.currentUser.cost) + parseInt(action.amount),
+				},
+			};
 
 		default:
 			return state;

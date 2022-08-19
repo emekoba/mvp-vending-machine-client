@@ -1,38 +1,83 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { asyncDeposit } from "../../backend";
-import Loader from "../../components/loader/Loader";
+import { logoutIcon } from "../../assets/assets";
+import { asyncBuy, asyncDeposit } from "../../backend";
+import Loader from "../../components/Loader";
+import { DispatchCommands } from "../../globals";
 import "./home.css";
+import { useNavigate } from "react-router-dom";
+import UserTab from "./UserTab";
 
-function Home({ username, cost }) {
-	const tabs = ["Transactions", "Products"];
+function Home({ username, role, wallet, updateWallet, logoutUser }) {
+	const tabs = ["User", "Products"];
 	const [home, setHome] = useState({
 		currentTab: tabs[0],
 		deposit: "",
 		buy: "",
+		productName: "",
 	});
-	const [loader, setloader] = useState(true);
+	const [loader, setloader] = useState({
+		depLoading: false,
+		buyLoading: false,
+	});
+	const navigate = useNavigate();
 
 	function switchTabs(e) {
 		setHome({ ...home, currentTab: e });
 	}
 
-	function updateField(e, field) {
-		setHome({ ...home, [`${field}`]: e.target.value });
-	}
+	// function updateField(e, field) {
+	// 	if (!loader.depLoading && field === "deposit") {
+	// 		setHome({ ...home, [`${field}`]: e.target.value });
+	// 	}
+
+	// 	if (!loader.buyLoading && (field === "buy" || field === "productName")) {
+	// 		setHome({ ...home, [`${field}`]: e.target.value });
+	// 	}
+	// }
 
 	function deposit() {
-		setloader(true);
-		asyncDeposit(home)
-			.then((res) => {
-				// console.log(res);
-			})
-			.catch((e) => {});
+		if (home.deposit !== "") {
+			setloader({ ...loader, depLoading: true });
+			asyncDeposit(home)
+				.then((res) => {
+					console.log(res);
+					updateWallet(home.deposit);
+				})
+				.catch((e) => {})
+				.finally(() => {
+					setloader({ ...loader, depLoading: false });
+				});
+		}
 	}
 
-	function buy() {}
+	function buy() {
+		setloader({ ...loader, depLoading: true });
+		asyncBuy(home)
+			.then((res) => {
+				console.log(res);
+				// updateWallet(home.deposit);
+			})
+			.catch((e) => {})
+			.finally(() => {
+				setloader({ ...loader, depLoading: false });
+			});
+	}
 
-	function logout() {}
+	function logout() {
+		logoutUser();
+		navigate("/auth");
+	}
+
+	function getTabs() {
+		switch (home.currentTab.toLowerCase()) {
+			case "user":
+				return <UserTab />;
+
+			default:
+				break;
+		}
+	}
 
 	return (
 		<div className="home">
@@ -58,43 +103,20 @@ function Home({ username, cost }) {
 				</div>
 
 				<div className="user-info">
-					{username}
-					<p>{`$${cost}`}</p>
+					<div>
+						<div>{username}</div>
+						{role}
+					</div>
+					<p>{`$${wallet}`}</p>
 				</div>
 			</div>
 
 			<div className="home-main">
-				<div className="home-left">
-					<div className="item-input-cntr">
-						<div className="input-cntr">
-							<input
-								value={home.deposit}
-								className="home-item-input"
-								onChange={(e) => updateField(e, "deposit")}
-								type="number"
-							/>
-							<button className="home-btn" onClick={deposit}>
-								{loader ? <Loader /> : "deposit"}
-							</button>
-						</div>
-					</div>
+				{getTabs()}
 
-					<div className="item-input-cntr">
-						<div className="input-cntr">
-							<input
-								value={home.buy}
-								className="home-item-input"
-								onChange={(e) => updateField(e, "buy")}
-								type="number"
-							/>
-							<button className="home-btn" onClick={buy}>
-								Buy
-							</button>
-						</div>
-					</div>
-				</div>
-
-				{/* <button className="logout" onClick={logout}></button> */}
+				<button className="logout" onClick={logout}>
+					<img src={logoutIcon} />
+				</button>
 			</div>
 		</div>
 	);
@@ -103,8 +125,24 @@ function Home({ username, cost }) {
 function mapStateToProps(state) {
 	return {
 		username: state.currentUser.username,
-		cost: state.currentUser.cost,
+		wallet: state.currentUser.deposit,
+		role: state.currentUser.role,
 	};
 }
 
-export default connect(mapStateToProps)(Home);
+function mapDispatchToProps(dispatch) {
+	return {
+		updateWallet: (amount) =>
+			dispatch({
+				type: DispatchCommands.UPDATE_WALLET,
+				amount,
+			}),
+
+		logoutUser: () =>
+			dispatch({
+				type: DispatchCommands.LOGOUT,
+			}),
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

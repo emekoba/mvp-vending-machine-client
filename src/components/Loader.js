@@ -1,8 +1,7 @@
 import PulseLoader from "react-spinners/PulseLoader";
 import { css } from "@emotion/react";
-import "./loader.css";
 
-function Loader({ isLoading, size, type, loaderStyles }) {
+function Loader({ isLoading, size, loaderStyles }) {
 	const override = css`
 		display: block;
 		margin: 0 auto;

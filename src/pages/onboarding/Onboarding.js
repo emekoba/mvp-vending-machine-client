@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { AuthStates } from "../../globals";
+import { AuthStates, DispatchCommands } from "../../globals";
 import { asyncLogin } from "../../backend";
 import "./onboarding.css";
+import { useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
 
-export default function Onboarding() {
+function Onboarding({ loginUser }) {
 	const [authForm, setAuthForm] = useState({
 		username: "rex",
 		password: "Password1$",
@@ -12,6 +14,7 @@ export default function Onboarding() {
 		role: "",
 		state: AuthStates.LOGIN,
 	});
+	const navigate = useNavigate();
 
 	function updateField(e, field) {
 		setAuthForm({ ...authForm, [`${field}`]: e.target.value });
@@ -20,14 +23,16 @@ export default function Onboarding() {
 	function login() {
 		asyncLogin(authForm)
 			.then((res) => {
-				// console.log(res);
+				console.log(res.data);
+				loginUser(res.data.user);
+				navigate("home");
 			})
 			.catch((e) => {});
 	}
 
 	function register() {
 		// control.dispatch({
-		// 	type: DisPatchCommands.REGISTER,
+		// 	type: DispatchCommands.REGISTER,
 		// 	name: authForm.name,
 		// 	email: authForm.email,
 		// 	password: authForm.password,
@@ -114,3 +119,15 @@ export default function Onboarding() {
 		</div>
 	);
 }
+
+function mapDispatchToProps(dispatch) {
+	return {
+		loginUser: (user) =>
+			dispatch({
+				type: DispatchCommands.LOGIN,
+				user,
+			}),
+	};
+}
+
+export default connect(null, mapDispatchToProps)(Onboarding);
