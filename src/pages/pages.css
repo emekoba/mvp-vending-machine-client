@@ -1,0 +1,13 @@
+.pages {
+	height: 80%;
+	width: 90%;
+	background: var(--accent);
+	border-radius: 30px;
+	border-bottom-right-radius: 20%;
+}
+
+.pages > p {
+	/* width: 100%; */
+	font-weight: bold;
+	text-align: center;
+}

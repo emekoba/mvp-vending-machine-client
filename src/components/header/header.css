@@ -1,5 +1,15 @@
 .header {
-	height: 100px;
-	width: 100vw;
+	min-height: 100px;
+	height: 150px;
+	width: 100%;
 	background-color: var(--accent);
+	padding-inline: 30px;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.logo {
+	width: 230px;
 }

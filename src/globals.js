@@ -1,10 +1,11 @@
 export const AppPages = {
 	HOME_PAGE: "/home",
-	ITEM_PAGE: "/item",
-	INVENTORY_PAGE: "/inventory",
-	ABOUT_PAGE: "/about",
-	ONBOARDING_PAGE: "/onboarding",
-	CREATE_ITEM_PAGE: "/item/create",
+	ONBOARDING_PAGE: "/auth",
+};
+
+export const AuthStates = {
+	LOGIN: "LOGIN",
+	REGISTER: "REGISTER",
 };
 
 export const DisPatchCommands = {

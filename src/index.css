@@ -1,7 +1,11 @@
 :root {
-	--accent: #d3eaa2;
-	--main: #accf9f;
-	--background: #f6f6f6;
+	--main: #e4e0db;
+	--accent: #f4f1eb;
+	--text: #042c25;
+
+	/* --main2: #accf9f;
+	--accent2: #d3eaa2;
+	--accent3: #d9edaf; */
 }
 
 @font-face {
@@ -16,10 +20,106 @@ body {
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background: var(--background);
+	background: var(--main);
+	box-sizing: border-box;
 }
 
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
+}
+
+div,
+textarea,
+input,
+button,
+p,
+h1 {
+	font-family: avenir;
+	letter-spacing: 1.5px;
+	color: var(--text);
+	font-weight: 900;
+	font-size: 2vw;
+	border-color: var(--text);
+}
+
+div {
+	box-sizing: border-box;
+	border-color: var(--text);
+}
+
+button {
+	outline: none;
+	border: 1px solid var(--text);
+	transition: 0.1s ease-in-out;
+	background: none;
+	cursor: pointer;
+	background: var(--text);
+	color: var(--main);
+	padding: 20px;
+	width: 20vw;
+}
+
+button:active {
+	transform: scale(0.9);
+}
+
+input,
+textarea {
+	outline: none;
+	box-sizing: border-box;
+	border: 1px solid;
+}
+
+input {
+	height: 7vh;
+	/* width: 100px; */
+	border: 1px solid;
+	border: none;
+	border-radius: 8px;
+	font-size: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	width: 30vw;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
+.hideScroll::-webkit-scrollbar {
+	scrollbar-color: white;
+	scrollbar-arrow-color: white;
+	display: none;
+}
+.hideScroll::-webkit-scrollbar-track {
+	display: none;
+}
+
+@keyframes bounceIn {
+	0% {
+		opacity: 0;
+		transform: scale(0.3);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes flash {
+	0% {
+		background: rgb(212, 152, 141);
+	}
+	100% {
+		background: none;
+	}
 }
