@@ -2,23 +2,33 @@
 	height: 100%;
 }
 
-.home-main {
-	/* display: grid;
-	grid-template-columns: 1fr 1fr; */
+.logout {
+	height: 100px;
+	width: 100px;
+	background-color: red;
+}
+
+.home-tabs {
+	display: flex;
+	justify-content: space-between;
+	padding-right: 30px;
+	align-items: center;
+}
+
+.user-info {
+	display: flex;
+	align-items: center;
+}
+.user-info > p {
+	font-weight: bold;
+	margin-right: 30px;
+	margin-left: 30px;
+	font-size: 2.5vw;
 }
 
 .home-left {
-	/* background: red; */
 	padding-top: 10vh;
 }
-
-/* .home-input-cntr {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	margin-bottom: 20px;
-	margin-left: 30px;
-} */
 
 .input-cntr {
 	background: white;

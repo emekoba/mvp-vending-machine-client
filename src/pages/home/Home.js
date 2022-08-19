@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { asyncDeposit } from "../../backend";
+import Loader from "../../components/loader/Loader";
 import "./home.css";
 
-function Home() {
+function Home({ username, cost }) {
 	const tabs = ["Transactions", "Products"];
 	const [home, setHome] = useState({
 		currentTab: tabs[0],
+		deposit: "",
+		buy: "",
 	});
+	const [loader, setloader] = useState(true);
 
 	function switchTabs(e) {
 		setHome({ ...home, currentTab: e });
@@ -15,30 +21,46 @@ function Home() {
 		setHome({ ...home, [`${field}`]: e.target.value });
 	}
 
-	function deposit() {}
+	function deposit() {
+		setloader(true);
+		asyncDeposit(home)
+			.then((res) => {
+				// console.log(res);
+			})
+			.catch((e) => {});
+	}
 
-	function buy(e, field) {}
+	function buy() {}
+
+	function logout() {}
 
 	return (
 		<div className="home">
 			<div className="home-tabs">
-				{tabs.map((e) => (
-					<button
-						key={e}
-						style={
-							!(home.currentTab === e)
-								? {
-										background: "var(--accent)",
-										border: "1px solid var(--text)",
-										color: "var(--text)",
-								  }
-								: {}
-						}
-						onClick={() => switchTabs(e)}
-					>
-						{e}
-					</button>
-				))}
+				<div>
+					{tabs.map((e) => (
+						<button
+							key={e}
+							style={
+								!(home.currentTab === e)
+									? {
+											background: "var(--accent)",
+											border: "1px solid var(--text)",
+											color: "var(--text)",
+									  }
+									: {}
+							}
+							onClick={() => switchTabs(e)}
+						>
+							{e}
+						</button>
+					))}
+				</div>
+
+				<div className="user-info">
+					{username}
+					<p>{`$${cost}`}</p>
+				</div>
 			</div>
 
 			<div className="home-main">
@@ -49,9 +71,10 @@ function Home() {
 								value={home.deposit}
 								className="home-item-input"
 								onChange={(e) => updateField(e, "deposit")}
+								type="number"
 							/>
 							<button className="home-btn" onClick={deposit}>
-								deposit
+								{loader ? <Loader /> : "deposit"}
 							</button>
 						</div>
 					</div>
@@ -59,9 +82,10 @@ function Home() {
 					<div className="item-input-cntr">
 						<div className="input-cntr">
 							<input
-								value={home.deposit}
+								value={home.buy}
 								className="home-item-input"
-								onChange={(e) => updateField(e, "deposit")}
+								onChange={(e) => updateField(e, "buy")}
+								type="number"
 							/>
 							<button className="home-btn" onClick={buy}>
 								Buy
@@ -70,7 +94,7 @@ function Home() {
 					</div>
 				</div>
 
-				<div className="home-right"></div>
+				{/* <button className="logout" onClick={logout}></button> */}
 			</div>
 		</div>
 	);
@@ -78,7 +102,8 @@ function Home() {
 
 function mapStateToProps(state) {
 	return {
-		stashDb: state.stash,
+		username: state.currentUser.username,
+		cost: state.currentUser.cost,
 	};
 }
 

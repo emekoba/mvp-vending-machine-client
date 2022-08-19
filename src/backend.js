@@ -4,8 +4,8 @@ const API_URL = "http://localhost:2000/";
 
 const ROUTES = {
 	auth: "user/",
-	bank: "product/",
-	admin: "transaction/",
+	product: "product/",
+	transaction: "transaction/",
 };
 
 const ENDPOINT = {
@@ -13,6 +13,16 @@ const ENDPOINT = {
 	signin: "login",
 	deposit: "update",
 };
+
+function authHeader() {
+	const russbank = JSON.parse(sessionStorage.getItem("russbank-user"));
+
+	if (russbank && russbank.token) {
+		return { Authorization: "Bearer " + russbank.token };
+	} else {
+		return {};
+	}
+}
 
 // function registers(form) {
 // 	// return axios
@@ -95,7 +105,7 @@ function asyncRegister(form) {
 // function transfer(form) {
 // 	return axios
 // 		.post(
-// 			API_URL + ROUTES.bank + ENDPOINT.transfer,
+// 			API_URL + ROUTES.product + ENDPOINT.transfer,
 // 			{
 // 				recipient: form.recipient,
 // 				amount: parseInt(form.amount),
@@ -113,30 +123,30 @@ function asyncRegister(form) {
 // 		});
 // }
 
-// function deposit(form) {
-// 	return axios
-// 		.post(
-// 			API_URL + ROUTES.bank + ENDPOINT.deposit,
-// 			{
-// 				amount: parseInt(form.amount),
-// 			},
-// 			{ headers: authHeader() }
-// 		)
-// 		.then((res) => {
-// 			return {
-// 				success: true,
-// 				data: res.data,
-// 			};
-// 		})
-// 		.catch((e) => {
-// 			return { success: false, messages: [e?.response?.data?.message] };
-// 		});
-// }
+function asyncDeposit(form) {
+	return axios
+		.post(
+			API_URL + ROUTES.transaction + ENDPOINT.deposit,
+			{
+				amount: parseInt(form.amount),
+			},
+			{ headers: authHeader() }
+		)
+		.then((res) => {
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, messages: [e?.response?.data?.message] };
+		});
+}
 
 // function withdraw(form) {
 // 	return axios
 // 		.post(
-// 			API_URL + ROUTES.bank + ENDPOINT.withdraw,
+// 			API_URL + ROUTES.product + ENDPOINT.withdraw,
 // 			{
 // 				amount: parseInt(form.amount),
 // 			},
@@ -155,7 +165,7 @@ function asyncRegister(form) {
 
 // function getAllUsers() {
 // 	return axios
-// 		.get(API_URL + ROUTES.admin + ENDPOINT.all, { headers: authHeader() })
+// 		.get(API_URL + ROUTES.transaction + ENDPOINT.all, { headers: authHeader() })
 // 		.then((res) => {
 // 			return {
 // 				success: true,
@@ -171,7 +181,7 @@ function asyncRegister(form) {
 // 	return axios
 // 		.delete(
 // 			API_URL +
-// 				ROUTES.admin +
+// 				ROUTES.transaction +
 // 				ENDPOINT.delete +
 // 				`account_number=${account_number}`,
 
@@ -190,7 +200,7 @@ function asyncRegister(form) {
 
 // function getTransactions() {
 // 	return axios
-// 		.get(API_URL + ROUTES.bank + ENDPOINT.transactions, {
+// 		.get(API_URL + ROUTES.product + ENDPOINT.transactions, {
 // 			headers: authHeader(),
 // 		})
 // 		.then((res) => {
@@ -207,6 +217,7 @@ function asyncRegister(form) {
 export {
 	asyncLogin,
 	asyncRegister,
+	asyncDeposit,
 	// transfer,
 	// deposit,
 	// withdraw,
