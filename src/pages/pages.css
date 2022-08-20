@@ -1,13 +1,18 @@
 .pages {
-	height: 80%;
+	height: 75vh;
 	width: 90%;
 	background: var(--accent);
 	border-radius: 30px;
-	border-bottom-right-radius: 20%;
+	position: relative;
 }
 
 .pages > p {
-	/* width: 100%; */
 	font-weight: bold;
 	text-align: center;
+}
+
+.role {
+	position: absolute;
+	top: 0;
+	right: 10vw;
 }

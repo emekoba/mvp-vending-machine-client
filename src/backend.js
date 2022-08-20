@@ -7,7 +7,7 @@ const ROUTES = {
 	transaction: "transaction/",
 };
 const ENDPOINT = {
-	signup: "create",
+	create: "create",
 	signin: "login",
 	update: "update",
 	deposit: "deposit",
@@ -15,10 +15,10 @@ const ENDPOINT = {
 };
 
 function authHeader() {
-	const russbank = JSON.parse(sessionStorage.getItem("russbank-user"));
+	const mvpUser = JSON.parse(sessionStorage.getItem("mvp-user"));
 
-	if (russbank && russbank.token) {
-		return { Authorization: "Bearer " + russbank.token };
+	if (mvpUser && mvpUser.token) {
+		return { Authorization: "Bearer " + mvpUser.token };
 	} else {
 		return {};
 	}
@@ -36,6 +36,7 @@ function asyncLogin(form) {
 					loginTime: new Date().getTime(),
 					expiresAt: 720,
 					token: res.data.token,
+					user: res.data.user,
 				};
 
 				sessionStorage.setItem("mvp-user", JSON.stringify(sessionObject));
@@ -47,13 +48,13 @@ function asyncLogin(form) {
 			};
 		})
 		.catch((e) => {
-			return { success: false, messages: [e?.response?.data?.message] };
+			return { success: false, error: e?.response.data.error };
 		});
 }
 
 function asyncRegister(form) {
 	return axios
-		.post(API_URL + ROUTES.auth + ENDPOINT.signup, {
+		.post(API_URL + ROUTES.auth + ENDPOINT.create, {
 			username: form.username,
 			password: form.password,
 			confirmPassword: form.confirmPassword,
@@ -67,7 +68,7 @@ function asyncRegister(form) {
 			};
 		})
 		.catch((e) => {
-			return { success: false, messages: [e?.response?.data?.message] };
+			return { success: false, error: e?.response.data.error };
 		});
 }
 
@@ -88,14 +89,14 @@ function asyncBuy(form) {
 			};
 		})
 		.catch((e) => {
-			return { success: false, messages: [e?.response?.data?.message] };
+			return { success: false, error: e?.response.data.error };
 		});
 }
 
 function asyncUpdate({ role, username }) {
 	return axios
 		.put(
-			API_URL + ROUTES.user + ENDPOINT.update,
+			API_URL + ROUTES.auth + ENDPOINT.update,
 			{
 				role,
 				username,
@@ -109,16 +110,16 @@ function asyncUpdate({ role, username }) {
 			};
 		})
 		.catch((e) => {
-			return { success: false, messages: [e?.response?.data?.message] };
+			return { success: false, error: e?.response.data.error };
 		});
 }
 
-function asyncDeposit(form) {
+function asyncDeposit(amount) {
 	return axios
 		.post(
 			API_URL + ROUTES.transaction + ENDPOINT.deposit,
 			{
-				amount: parseInt(form.amount),
+				amount,
 			},
 			{ headers: authHeader() }
 		)
@@ -129,7 +130,7 @@ function asyncDeposit(form) {
 			};
 		})
 		.catch((e) => {
-			return { success: false, messages: [e?.response?.data?.message] };
+			return { success: false, error: e?.response.data.error };
 		});
 }
 
@@ -143,10 +144,40 @@ function asyncGetProduct(id) {
 			};
 		})
 		.catch((e) => {
-			return { success: false, messages: [e?.response?.data?.message] };
+			return { success: false, error: e?.response.data.error };
 		});
 }
 
+function asyncCreateProduct({ productName, cost, amountAvailable }) {
+	return axios
+		.post(
+			API_URL + ROUTES.product + ENDPOINT.create,
+			{
+				productName,
+				cost,
+				amountAvailable,
+			},
+			{ headers: authHeader() }
+		)
+		.then((res) => {
+			const sessionObject = {
+				loginTime: new Date().getTime(),
+				expiresAt: 720,
+				token: res.data.token,
+				user: res.data.user,
+			};
+
+			sessionStorage.setItem("mvp-user", JSON.stringify(sessionObject));
+
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, error: e?.response.data.error };
+		});
+}
 // function deleteUser(account_number) {
 // 	return axios
 // 		.delete(
@@ -164,7 +195,7 @@ function asyncGetProduct(id) {
 // 			};
 // 		})
 // 		.catch((e) => {
-// 			return { success: false, messages: [e?.response?.data?.message] };
+// 			return { success: false,  error: e?.response.data.error };
 // 		});
 // }
 
@@ -180,7 +211,7 @@ function asyncGetProduct(id) {
 // 			};
 // 		})
 // 		.catch((e) => {
-// 			return { success: false, messages: [e?.response?.data?.message] };
+// 			return { success: false,  error: e?.response.data.error };
 // 		});
 // }
 
@@ -191,4 +222,5 @@ export {
 	asyncGetProduct,
 	asyncBuy,
 	asyncUpdate,
+	asyncCreateProduct,
 };

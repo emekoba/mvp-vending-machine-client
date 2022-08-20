@@ -1,0 +1,32 @@
+.product-tab {
+	height: 100%;
+	/* background-color: red; */
+	overflow-y: scroll;
+	padding: 20px;
+}
+
+.create-product {
+	height: 100%;
+	display: grid;
+	grid-template-columns: 0.5fr 1fr;
+}
+
+.create-product-field:nth-of-type(2) {
+	padding-left: 20px;
+	overflow-y: scroll;
+}
+
+.product-input-cntr {
+	height: 9vh;
+}
+
+.product-input-cntr > input {
+	margin-bottom: 10px;
+	border-radius: 0px;
+	text-align: center;
+}
+
+.product-row {
+	display: flex;
+	justify-content: flex-end;
+}

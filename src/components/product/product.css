@@ -1,0 +1,23 @@
+.product {
+	height: 300;
+	/* width: 100%; */
+	background: white;
+	display: flex;
+	justify-content: space-between;
+}
+
+#product-name {
+	padding: 10px;
+}
+
+.product-options {
+	height: 200;
+	/* width: 100px; */
+	background: red;
+	display: flex;
+	justify-content: space-between;
+}
+
+.product-options > button {
+	width: 100px;
+}

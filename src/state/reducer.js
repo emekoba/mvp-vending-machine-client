@@ -1,31 +1,16 @@
-import { createContext } from "react";
 import { AppPages, DispatchCommands, generateId } from "../globals";
-
-export const Control = createContext();
 
 export const globalStore = {
 	isLoggedIn: false,
 	currentAppPage: AppPages.HOME_PAGE,
-	currentUser: {},
+	currentUser: {
+		...JSON.parse(sessionStorage.getItem("mvp-user"))?.["user"],
+	},
+	productList: [],
+	// sessionStorage.getItem("productList") !== null
+	// 		? JSON.parse(sessionStorage.getItem("productList"))
+	// 		:
 };
-
-function registerUser(name, email, password, state) {
-	const usersDb = JSON.parse(localStorage.getItem("users"));
-
-	let newUsersDb = {
-		...usersDb,
-		[`${generateId()}`]: {
-			name,
-			email,
-			password,
-			createdAt: new Date(),
-		},
-	};
-
-	localStorage.setItem("users", JSON.stringify(newUsersDb));
-
-	return state;
-}
 
 function createItem(item, state) {
 	let ordered_item = { ...JSON.parse(localStorage.getItem("items")) };
@@ -45,28 +30,35 @@ function createItem(item, state) {
 	};
 }
 
-// function addItemToInventory(inventoryId, itemId) {
-// 	let inventoriesDb = JSON.parse(localStorage.getItem("inventories"));
+function updateUser(user, state) {
+	let mvpUser = JSON.parse(sessionStorage.getItem("mvp-user"));
 
-// 	inventoriesDb[inventoryId] = {
-// 		...inventoriesDb[inventoryId],
-// 		items: {
-// 			...inventoriesDb[inventoryId]["items"],
-// 			[`${itemId}`]: {
-// 				addedAt: new Date(),
-// 			},
-// 		},
-// 	};
+	let update = {
+		...mvpUser["user"],
+		...user,
+	};
 
-// 	localStorage.setItem("inventories", JSON.stringify(inventoriesDb));
-// }
+	console.log(update);
 
-// function getInventories(state) {
-// 	return {
-// 		...state,
-// 		inventories: JSON.parse(localStorage.getItem("inventories")),
-// 	};
-// }
+	sessionStorage.setItem(
+		"mvp-user",
+		JSON.stringify({ ...mvpUser, user: update })
+	);
+
+	return {
+		...state,
+		currentUser: update,
+	};
+}
+
+function updateProductList(productList, state) {
+	// sessionStorage.setItem("productList", productList);
+
+	return {
+		...state,
+		productList,
+	};
+}
 
 export function globalReducer(state = globalStore, action) {
 	switch (action.type) {
@@ -77,14 +69,15 @@ export function globalReducer(state = globalStore, action) {
 				currentUser: action.user,
 			};
 
-		case DispatchCommands.REGISTER:
-			return registerUser(action.name, action.email, action.password, state);
-
 		case DispatchCommands.LOGOUT:
 			return {
 				...state,
 				isLoggedIn: false,
+				currentUser: {},
 			};
+
+		case DispatchCommands.UPDATE_USER:
+			return updateUser(action.user, state);
 
 		case DispatchCommands.CHANGE_CURRENT_PAGE:
 			return {
@@ -95,14 +88,18 @@ export function globalReducer(state = globalStore, action) {
 		case DispatchCommands.CREATE_PRODUCT:
 			return createItem(action.item, state);
 
+		case DispatchCommands.UPDATE_PRODUCT_LIST:
+			return updateProductList(action.productList, state);
+
 		case DispatchCommands.UPDATE_WALLET:
-			return {
-				...state,
-				currentUser: {
+			return updateUser(
+				{
 					...state.currentUser,
-					cost: parseInt(state.currentUser.cost) + parseInt(action.amount),
+					deposit:
+						parseInt(state.currentUser.deposit) + parseInt(action.amount),
 				},
-			};
+				state
+			);
 
 		default:
 			return state;

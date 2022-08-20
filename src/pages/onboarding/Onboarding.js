@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { AuthStates, DispatchCommands } from "../../globals";
-import { asyncLogin } from "../../backend";
+import { asyncLogin, asyncRegister } from "../../backend";
 import "./onboarding.css";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 
-function Onboarding({ loginUser }) {
+function Onboarding({ user, loginUser, registerUser }) {
 	const [authForm, setAuthForm] = useState({
-		username: "rex",
+		username: "ambrose",
 		password: "Password1$",
 		confirmPassword: "",
-		deposit: "",
-		role: "",
+		deposit: "0",
+		role: "buyer",
 		state: AuthStates.LOGIN,
 	});
 	const navigate = useNavigate();
@@ -20,24 +20,32 @@ function Onboarding({ loginUser }) {
 		setAuthForm({ ...authForm, [`${field}`]: e.target.value });
 	}
 
-	function login() {
-		asyncLogin(authForm)
-			.then((res) => {
-				console.log(res.data);
-				loginUser(res.data.user);
-				navigate("home");
-			})
-			.catch((e) => {});
+	async function login() {
+		const resp = await asyncLogin(authForm);
+
+		if (resp.success) {
+			console.log(resp.data);
+			navigate("/home");
+			loginUser(resp.data.user);
+		} else {
+			alert(resp.error);
+		}
 	}
 
-	function register() {
-		// control.dispatch({
-		// 	type: DispatchCommands.REGISTER,
-		// 	name: authForm.name,
-		// 	email: authForm.email,
-		// 	password: authForm.password,
-		// });
-		// setAuthForm({ ...auth, signState: "sign-in" });
+	async function register() {
+		if (Object.keys(authForm).filter((e) => authForm[e] === "").length === 0) {
+			const resp = await asyncRegister(authForm);
+
+			if (resp.success) {
+				console.log(resp.data);
+				// registerUser(resp.data.user);
+				setAuthForm({ ...authForm, state: AuthStates.LOGIN });
+			} else {
+				alert(resp.error);
+			}
+		} else {
+			alert("Fill All Fields To Contine");
+		}
 	}
 
 	function toggleAuth() {
@@ -52,8 +60,6 @@ function Onboarding({ loginUser }) {
 
 	return (
 		<div className="onboarding">
-			<div className="bottom-right-effect" />
-
 			<div className="onboarding-leftside">
 				<div className="item-input-cntr">
 					<p>Username</p>
@@ -70,6 +76,7 @@ function Onboarding({ loginUser }) {
 						value={authForm.password}
 						className="item-input"
 						onChange={(e) => updateField(e, "password")}
+						type="password"
 					/>
 				</div>
 
@@ -81,6 +88,7 @@ function Onboarding({ loginUser }) {
 								value={authForm.confirmPassword}
 								className="item-input"
 								onChange={(e) => updateField(e, "confirmPassword")}
+								type="password"
 							/>
 						</div>
 						<div className="item-input-cntr">
@@ -89,15 +97,24 @@ function Onboarding({ loginUser }) {
 								value={authForm.deposit}
 								className="item-input"
 								onChange={(e) => updateField(e, "deposit")}
+								type="number"
 							/>
 						</div>
 						<div className="item-input-cntr">
 							<p>Role</p>
-							<input
+							{/* <input
 								value={authForm.role}
 								className="item-input"
 								onChange={(e) => updateField(e, "role")}
-							/>
+							/> */}
+
+							<select
+								onChange={(e) => updateField(e, "role")}
+								value={authForm.role}
+							>
+								<option value="BUYER">BUYER</option>
+								<option value="SELLER">SELLER</option>
+							</select>
 						</div>
 					</>
 				)}
@@ -120,6 +137,12 @@ function Onboarding({ loginUser }) {
 	);
 }
 
+function mapStateToProps(state) {
+	return {
+		role: state.currentUser.role,
+	};
+}
+
 function mapDispatchToProps(dispatch) {
 	return {
 		loginUser: (user) =>
@@ -127,7 +150,12 @@ function mapDispatchToProps(dispatch) {
 				type: DispatchCommands.LOGIN,
 				user,
 			}),
+		registerUser: (user) =>
+			dispatch({
+				type: DispatchCommands.REGISTER,
+				user,
+			}),
 	};
 }
 
-export default connect(null, mapDispatchToProps)(Onboarding);
+export default connect(mapStateToProps, mapDispatchToProps)(Onboarding);

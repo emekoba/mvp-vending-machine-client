@@ -3,10 +3,13 @@ import Home from "./home/Home";
 import { Navigate, Route, Routes } from "react-router";
 import "./pages.css";
 import { AppPages } from "../globals";
+import { connect } from "react-redux";
 
-export default function Pages() {
+function Pages({ role }) {
 	return (
 		<div className="pages">
+			<p className="role">{role}</p>
+
 			<p>MVP Vending Machine</p>
 
 			<div style={{ height: "100%" }}>
@@ -29,3 +32,11 @@ export default function Pages() {
 		</div>
 	);
 }
+
+function mapStateToProps(state) {
+	return {
+		role: state.currentUser.role,
+	};
+}
+
+export default connect(mapStateToProps)(Pages);

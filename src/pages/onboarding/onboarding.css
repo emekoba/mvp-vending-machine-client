@@ -6,22 +6,6 @@
 	grid-template-columns: 1fr 1fr;
 }
 
-.bottom-right-effect {
-	background-color: var(--main);
-	height: 10vw;
-	width: 10vw;
-	border-radius: 100%;
-	border-bottom-right-radius: 0px;
-	position: absolute;
-	bottom: 0;
-	right: 0;
-}
-
-.onboarding-leftside {
-	/* overflow-y: scroll; */
-	/* border-right: 1px solid var(--text); */
-}
-
 .item-input-cntr {
 	display: flex;
 	flex-direction: column;
@@ -32,6 +16,12 @@
 .item-input-cntr > p {
 	margin-left: 5px;
 	font-size: 1.5vw;
+}
+
+.onboarding-leftside {
+	height: 80%;
+	overflow-y: scroll;
+	/* background: red; */
 }
 
 .onboarding-rightside {
