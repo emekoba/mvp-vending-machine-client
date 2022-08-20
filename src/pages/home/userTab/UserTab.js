@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { asyncUpdate } from "../../../backend";
+import { asyncReset, asyncUpdate } from "../../../backend";
 import Loader from "../../../components/Loader";
 import { connect } from "react-redux";
 import { asyncDeposit } from "../../../backend";
 import { DispatchCommands } from "../../../globals";
 
-function UserTab({ user, updateWallet, updateUser }) {
+function UserTab({ user, updateWallet, updateUser, resetWallet }) {
 	const [userScheme, setUserScheme] = useState({
 		user,
 		deposit: "",
@@ -13,6 +13,7 @@ function UserTab({ user, updateWallet, updateUser }) {
 	const [loader, setloader] = useState({
 		depLoading: false,
 		updateLoading: false,
+		resetLoading: false,
 	});
 
 	async function update() {
@@ -64,6 +65,19 @@ function UserTab({ user, updateWallet, updateUser }) {
 		}
 	}
 
+	async function reset() {
+		setloader({ ...loader, resetLoading: true });
+
+		const resp = await asyncReset();
+
+		if (resp.success) {
+			resetWallet(0);
+		} else {
+			alert(resp.error);
+		}
+		setloader({ ...loader, resetLoading: false });
+	}
+
 	return (
 		<div className="user-tab">
 			<div className="item-input-cntr">
@@ -101,9 +115,15 @@ function UserTab({ user, updateWallet, updateUser }) {
 							min="1"
 							type="number"
 						/>
-
 						<button className="home-btn" onClick={deposit}>
 							{loader.depLoading ? <Loader /> : "Deposit"}
+						</button>
+						<button
+							className="home-btn"
+							style={{ marginLeft: 20 }}
+							onClick={reset}
+						>
+							{loader.resetLoading ? <Loader /> : "Reset"}
 						</button>
 					</div>
 				</div>
@@ -135,6 +155,12 @@ function mapDispatchToProps(dispatch) {
 		logoutUser: () =>
 			dispatch({
 				type: DispatchCommands.LOGOUT,
+			}),
+
+		resetWallet: (amount) =>
+			dispatch({
+				type: DispatchCommands.RESET_WALLET,
+				amount,
 			}),
 	};
 }

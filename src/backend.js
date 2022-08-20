@@ -14,6 +14,7 @@ const ENDPOINT = {
 	buy: "buy",
 	all: "all",
 	delete: "delete/",
+	reset: "reset",
 };
 
 function authHeader() {
@@ -202,6 +203,26 @@ function asyncDeleteProduct(productId) {
 		});
 }
 
+function asyncReset() {
+	return axios
+		.post(
+			API_URL + ROUTES.transaction + ENDPOINT.reset,
+			{},
+			{
+				headers: authHeader(),
+			}
+		)
+		.then((res) => {
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, error: e?.response.data.error };
+		});
+}
+
 export {
 	asyncLogin,
 	asyncRegister,
@@ -212,4 +233,5 @@ export {
 	asyncCreateProduct,
 	asyncGetAllProducts,
 	asyncDeleteProduct,
+	asyncReset,
 };

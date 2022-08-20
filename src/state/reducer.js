@@ -38,8 +38,6 @@ function updateUser(user, state) {
 		...user,
 	};
 
-	console.log(update);
-
 	sessionStorage.setItem(
 		"mvp-user",
 		JSON.stringify({ ...mvpUser, user: update })
@@ -97,6 +95,25 @@ export function globalReducer(state = globalStore, action) {
 					...state.currentUser,
 					deposit:
 						parseInt(state.currentUser.deposit) + parseInt(action.amount),
+				},
+				state
+			);
+
+		case DispatchCommands.DEBIT_WALLET:
+			return updateUser(
+				{
+					...state.currentUser,
+					deposit:
+						parseInt(state.currentUser.deposit) - parseInt(action.amount),
+				},
+				state
+			);
+
+		case DispatchCommands.RESET_WALLET:
+			return updateUser(
+				{
+					...state.currentUser,
+					deposit: parseInt(action.amount),
 				},
 				state
 			);

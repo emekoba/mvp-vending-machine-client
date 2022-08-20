@@ -4,6 +4,7 @@ import { asyncBuy, asyncDeleteProduct } from "../../backend";
 import "./product.css";
 
 function Product({
+	id,
 	userRole,
 	name,
 	cost,
@@ -17,7 +18,11 @@ function Product({
 		<div className="product">
 			<div className="product-header">
 				<div id="product-cost">¢{cost}</div>
-				<div id="product-amtAv">stock: {amountAvailable}</div>
+				<div id="product-amtAv">
+					{amountAvailable || amountAvailable != 0
+						? `stock: ${amountAvailable}`
+						: "out of stock"}
+				</div>
 			</div>
 
 			<div className="product-bottom">
@@ -35,7 +40,7 @@ function Product({
 								min="1"
 							/>
 
-							<button onClick={buy}>
+							<button onClick={() => buy(id, amountNeeded, cost)}>
 								<img src={buyIcon} />
 							</button>
 						</>

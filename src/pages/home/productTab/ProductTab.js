@@ -26,10 +26,7 @@ function ProductTab({ userRole, productList, updateProductList, debitWallet }) {
 		async function fetchProduct() {
 			const resp = await asyncGetAllProducts();
 
-			// console.log(resp);
-
 			if (resp.success) {
-				console.log(resp.data.products);
 				setproductScheme({ ...productScheme, productList: resp.data.products });
 				updateProductList(resp.data.products);
 			} else {
@@ -83,8 +80,16 @@ function ProductTab({ userRole, productList, updateProductList, debitWallet }) {
 		});
 
 		if (resp.success) {
-			console.log(resp.data);
-			debitWallet(cost);
+			debitWallet(cost * amt);
+			let newList = productList;
+			let objIndex = productList.findIndex((obj) => obj.id == id);
+
+			newList[objIndex]["amountAvailable"] = `${
+				parseInt(newList[objIndex]["amountAvailable"]) - amt
+			}`;
+
+			setproductScheme({ ...productScheme, productList: newList });
+			updateProductList(newList);
 		} else {
 			alert(resp.error);
 		}
@@ -166,12 +171,13 @@ function ProductTab({ userRole, productList, updateProductList, debitWallet }) {
 						>
 							{productScheme.productList.map((e) => (
 								<Product
+									id={e.id}
 									key={generateId()}
 									userRole={userRole}
 									name={e.productName}
 									cost={e.cost}
 									amountAvailable={e.amountAvailable}
-									buy={() => buy(e.id, e.amountAvailable, e.cost)}
+									buy={buy}
 									deleteProduct={() => deleteProduct(e.id)}
 								/>
 							))}
@@ -196,12 +202,13 @@ function ProductTab({ userRole, productList, updateProductList, debitWallet }) {
 						>
 							{productScheme.productList.map((e) => (
 								<Product
+									id={e.id}
 									key={generateId()}
 									userRole={userRole}
 									name={e.productName}
 									cost={e.cost}
 									amountAvailable={e.amountAvailable}
-									buy={() => buy(e.id, e.amountAvailable)}
+									buy={buy}
 									delete={() => deleteProduct(e.id)}
 								/>
 							))}
@@ -226,6 +233,12 @@ function mapDispatchToProps(dispatch) {
 			dispatch({
 				type: DispatchCommands.UPDATE_PRODUCT_LIST,
 				productList,
+			}),
+
+		debitWallet: (amount) =>
+			dispatch({
+				type: DispatchCommands.DEBIT_WALLET,
+				amount,
 			}),
 	};
 }

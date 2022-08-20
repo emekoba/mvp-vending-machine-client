@@ -19,6 +19,8 @@ export const DispatchCommands = {
 	UPDATE_WALLET: "UPDATE_WALLET",
 	UPDATE_USER: "UPDATE_USER",
 	UPDATE_PRODUCT_LIST: "UPDATE_PRODUCT_LIST",
+	DEBIT_WALLET: "DEBIT_WALLET",
+	RESET_WALLET: "RESET_WALLET",
 };
 
 export function generateId(length) {

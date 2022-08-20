@@ -13,7 +13,7 @@ function Loader({ isLoading, size, loaderStyles }) {
 		color: "var(--accent)",
 		loading: isLoading,
 		css: override,
-		size: size ?? 6,
+		size: size ?? "1.2vw",
 	};
 
 	return (
