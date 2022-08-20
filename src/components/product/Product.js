@@ -11,7 +11,7 @@ function Product({
 	buy,
 	deleteProduct,
 }) {
-	const [amountNeeded, setAmountNeeded] = useState("3");
+	const [amountNeeded, setAmountNeeded] = useState("1");
 
 	return (
 		<div className="product">
