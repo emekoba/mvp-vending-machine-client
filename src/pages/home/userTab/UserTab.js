@@ -75,14 +75,14 @@ function UserTab({ user, updateWallet, updateUser }) {
 						placeholder="username"
 					/>
 
-					<select
+					{/* <select
 						onChange={(e) => updateField(e, "role")}
 						className="home-item-select"
 						value={userScheme.user.role}
 					>
 						<option value="BUYER">BUYER</option>
 						<option value="SELLER">SELLER</option>
-					</select>
+					</select> */}
 
 					<button className="home-btn" onClick={update}>
 						{loader.updateLoading ? <Loader /> : "Update"}
@@ -90,21 +90,24 @@ function UserTab({ user, updateWallet, updateUser }) {
 				</div>
 			</div>
 
-			<div className="item-input-cntr">
-				<div className="input-cntr">
-					<input
-						value={userScheme.deposit}
-						className="home-item-input"
-						onChange={(e) => updateField(e, "deposit")}
-						placeholder="deposit"
-						type="number"
-					/>
+			{user.role === "BUYER" && (
+				<div className="item-input-cntr">
+					<div className="input-cntr">
+						<input
+							value={userScheme.deposit}
+							className="home-item-input"
+							onChange={(e) => updateField(e, "deposit")}
+							placeholder="deposit"
+							min="1"
+							type="number"
+						/>
 
-					<button className="home-btn" onClick={deposit}>
-						{loader.depLoading ? <Loader /> : "Deposit"}
-					</button>
+						<button className="home-btn" onClick={deposit}>
+							{loader.depLoading ? <Loader /> : "Deposit"}
+						</button>
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 }

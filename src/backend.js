@@ -12,6 +12,8 @@ const ENDPOINT = {
 	update: "update",
 	deposit: "deposit",
 	buy: "buy",
+	all: "all",
+	delete: "delete/",
 };
 
 function authHeader() {
@@ -148,6 +150,20 @@ function asyncGetProduct(id) {
 		});
 }
 
+function asyncGetAllProducts() {
+	return axios
+		.get(API_URL + ROUTES.product + ENDPOINT.all, { headers: authHeader() })
+		.then((res) => {
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, error: e?.response.data.error };
+		});
+}
+
 function asyncCreateProduct({ productName, cost, amountAvailable }) {
 	return axios
 		.post(
@@ -160,15 +176,6 @@ function asyncCreateProduct({ productName, cost, amountAvailable }) {
 			{ headers: authHeader() }
 		)
 		.then((res) => {
-			const sessionObject = {
-				loginTime: new Date().getTime(),
-				expiresAt: 720,
-				token: res.data.token,
-				user: res.data.user,
-			};
-
-			sessionStorage.setItem("mvp-user", JSON.stringify(sessionObject));
-
 			return {
 				success: true,
 				data: res.data,
@@ -178,42 +185,22 @@ function asyncCreateProduct({ productName, cost, amountAvailable }) {
 			return { success: false, error: e?.response.data.error };
 		});
 }
-// function deleteUser(account_number) {
-// 	return axios
-// 		.delete(
-// 			API_URL +
-// 				ROUTES.transaction +
-// 				ENDPOINT.delete +
-// 				`account_number=${account_number}`,
 
-// 			{ headers: authHeader() }
-// 		)
-// 		.then((res) => {
-// 			return {
-// 				success: true,
-// 				data: res.data,
-// 			};
-// 		})
-// 		.catch((e) => {
-// 			return { success: false,  error: e?.response.data.error };
-// 		});
-// }
-
-// function getTransactions() {
-// 	return axios
-// 		.get(API_URL + ROUTES.product + ENDPOINT.transactions, {
-// 			headers: authHeader(),
-// 		})
-// 		.then((res) => {
-// 			return {
-// 				success: true,
-// 				data: res.data,
-// 			};
-// 		})
-// 		.catch((e) => {
-// 			return { success: false,  error: e?.response.data.error };
-// 		});
-// }
+function asyncDeleteProduct(productId) {
+	return axios
+		.delete(API_URL + ROUTES.product + ENDPOINT.delete + productId, {
+			headers: authHeader(),
+		})
+		.then((res) => {
+			return {
+				success: true,
+				data: res.data,
+			};
+		})
+		.catch((e) => {
+			return { success: false, error: e?.response.data.error };
+		});
+}
 
 export {
 	asyncLogin,
@@ -223,4 +210,6 @@ export {
 	asyncBuy,
 	asyncUpdate,
 	asyncCreateProduct,
+	asyncGetAllProducts,
+	asyncDeleteProduct,
 };

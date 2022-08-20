@@ -97,6 +97,7 @@ function Onboarding({ user, loginUser, registerUser }) {
 								value={authForm.deposit}
 								className="item-input"
 								onChange={(e) => updateField(e, "deposit")}
+								min="1"
 								type="number"
 							/>
 						</div>

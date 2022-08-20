@@ -52,7 +52,7 @@ function updateUser(user, state) {
 }
 
 function updateProductList(productList, state) {
-	// sessionStorage.setItem("productList", productList);
+	sessionStorage.setItem("productList", productList);
 
 	return {
 		...state,

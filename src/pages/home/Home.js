@@ -68,7 +68,7 @@ function Home({ username, role, wallet, logoutUser }) {
 
 				<div className="user-info">
 					{username}
-					<p>{`¢${wallet}`}</p>
+					{role !== "SELLER" && <p>{`¢${wallet}`}</p>}
 				</div>
 			</div>
 
@@ -81,6 +81,7 @@ function mapStateToProps(state) {
 	return {
 		username: state.currentUser.username,
 		wallet: state.currentUser.deposit,
+		role: state.currentUser.role,
 	};
 }
 
