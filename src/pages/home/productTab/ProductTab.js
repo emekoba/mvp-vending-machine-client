@@ -4,7 +4,6 @@ import {
 	asyncCreateProduct,
 	asyncDeleteProduct,
 	asyncGetAllProducts,
-	asyncUpdate,
 } from "../../../backend";
 import Loader from "../../../components/Loader";
 import Product from "../../../components/product/Product";
@@ -16,9 +15,9 @@ function ProductTab({ userRole, productList, updateProductList, debitWallet }) {
 	const [productScheme, setproductScheme] = useState({
 		productList,
 		form: {
-			productName: "wuyikl",
-			amountAvailable: "23",
-			cost: "32",
+			productName: "",
+			amountAvailable: "",
+			cost: "",
 		},
 	});
 

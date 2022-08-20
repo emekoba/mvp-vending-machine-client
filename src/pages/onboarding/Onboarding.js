@@ -7,11 +7,11 @@ import { connect } from "react-redux";
 
 function Onboarding({ user, loginUser, registerUser }) {
 	const [authForm, setAuthForm] = useState({
-		username: "ambrose",
-		password: "Password1$",
+		username: "",
+		password: "",
 		confirmPassword: "",
-		deposit: "0",
-		role: "buyer",
+		deposit: "",
+		role: "BUYER",
 		state: AuthStates.LOGIN,
 	});
 	const navigate = useNavigate();

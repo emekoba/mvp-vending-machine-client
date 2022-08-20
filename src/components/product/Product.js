@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { buyIcon, deleteIcon } from "../../assets/assets";
-import { asyncBuy, asyncDeleteProduct } from "../../backend";
 import "./product.css";
 
 function Product({
